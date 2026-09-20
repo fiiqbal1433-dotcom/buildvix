@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-dark: #08090C;
+  --surface-dark: #0C0F15;
+  --card-dark: #10141D;
+  --cyan-neon: #00FFD1;
+  --mint-neon: #00FFA3;
+  --blue-neon: #0076F7;
+  --accent-border: rgba(255, 255, 255, 0.08);
+  --accent-border-strong: rgba(255, 255, 255, 0.16);
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Custom Typography Utilities */
+.font-display {
+  font-family: 'Syne', sans-serif;
+}
+
+.font-sans {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glowing Neon Text Gradients */
+.text-gradient-cyan {
+  background: linear-gradient(90deg, #00FFA3 0%, #00FFD1 50%, #00E5FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan-blue {
+  background: linear-gradient(90deg, #00FFD1 0%, #00D592 40%, #0076F7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Gradient Action Button */
+.btn-primary-gradient {
+  background: linear-gradient(90deg, #00D592 0%, #00B4D8 50%, #0076F7 100%);
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary-gradient:hover {
+  filter: brightness(1.12);
+  box-shadow: 0 0 24px rgba(0, 213, 146, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+  background: linear-gradient(180deg, rgba(16, 20, 29, 0.75) 0%, rgba(10, 13, 19, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 255, 209, 0.22);
+}
+
+/* Camera HUD Elements */
+.hud-grid-lines {
+  background-size: 33.333% 33.333%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+}
+
+/* Glow Radial Accents */
+.radial-glow-cyan {
+  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 209, 0.15) 0%, transparent 70%);
+}
+
+.radial-glow-blue {
+  background: radial-gradient(circle at 50% 50%, rgba(0, 118, 247, 0.12) 0%, transparent 70%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08090C;
+}
+::-webkit-scrollbar-thumb {
+  background: #1A2130;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #28344B;
+}
+
