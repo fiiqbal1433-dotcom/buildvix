@@ -43,8 +43,7 @@ const WEBSITE_CARDS: ArtCard[] = [
     title: 'E-Commerce & Digital Stores',
     category: 'FULL-STACK E-COMMERCE',
     image: '/assets/work/project3.webp',
-    tag: '@web_scale',
-    tagColor: '#5f86ff',
+    tag: null,
     actionText: 'View Project',
   },
   {
@@ -243,20 +242,6 @@ export default function HeroSection() {
                   <span className="absolute -bottom-1.5 left-5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#173ded]" />
                 </motion.div>
 
-                {/* Floating Tag 2: @web_scale (Electric Blue) */}
-                <motion.div
-                  animate={{
-                    y: [-4, 8, -4],
-                    rotate: [1, -2, 1],
-                  }}
-                  transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                  onClick={(e) => scrollToSection(e, 'work')}
-                  className="absolute top-[14%] right-[14%] sm:right-[18%] z-35 px-4 py-1.5 rounded-full bg-[#5f86ff] text-white text-xs sm:text-sm font-bold shadow-[0_10px_30px_rgba(95,134,255,0.55)] cursor-pointer select-none hover:scale-110 transition-transform"
-                  title="Click to view website projects"
-                >
-                  @web_scale
-                  <span className="absolute -bottom-1.5 right-5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#5f86ff]" />
-                </motion.div>
 
                 {/* 5 Cards Stack */}
                 {currentCards.map((card, idx) => {

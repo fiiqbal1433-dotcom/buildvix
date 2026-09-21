@@ -51,8 +51,7 @@ Error generating stack: `+e.message+`
       title: "E-Commerce & Digital Stores",
       category: "FULL-STACK E-COMMERCE",
       image: "/assets/work/project3.webp",
-      tag: "@web_scale",
-      tagColor: "#5f86ff",
+      tag: null,
       action: "View Store Work"
     },
     {
@@ -218,13 +217,6 @@ Error generating stack: `+e.message+`
                       onClick: (e) => handleRedirectToProjects(e, "work"),
                       title: "Click to explore Website Projects",
                       children: "@buildvix"
-                    }),
-
-                    (0, Ua.jsx)("div", {
-                      className: "ross-floating-badge ross-badge-andrea",
-                      onClick: (e) => handleRedirectToProjects(e, "work"),
-                      title: "Click to explore Web Platforms",
-                      children: "@web_scale"
                     }),
 
                     currentCards.map((card, idx) =>
