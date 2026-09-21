@@ -1,9 +1,10 @@
-﻿import Navbar from './components/Navbar';
+import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import SceneAnalysisSection from './components/SceneAnalysisSection';
 import BentoFeaturesSection from './components/BentoFeaturesSection';
 import FeatureGridSection from './components/FeatureGridSection';
 import FooterSection from './components/FooterSection';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   return (
@@ -27,6 +28,9 @@ export default function App() {
 
       {/* 6. Footer & Newsletter: "Your exclusive backstage pass" */}
       <FooterSection />
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
