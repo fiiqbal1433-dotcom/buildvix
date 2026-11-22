@@ -186,6 +186,8 @@
   /* Native WebGL: procedural metallic knot / elliptical orbit, no network calls.
      The hero always has a graceful CSS/typographic fallback if WebGL is unavailable. */
   function setupSculpture() {
+    // The layered 3D portal is the hero engine. Avoid hidden WebGL GPU work.
+    if (document.getElementById('hero-portal')) return null;
     const canvas = $('#universe');
     // Keep the 3D canvas inside the hero stacking context: art behind typography, never over navigation.
     $('.hero')?.prepend(canvas);
