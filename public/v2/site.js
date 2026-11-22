@@ -187,6 +187,8 @@
      The hero always has a graceful CSS/typographic fallback if WebGL is unavailable. */
   function setupSculpture() {
     const canvas = $('#universe');
+    // Keep the 3D canvas inside the hero stacking context: art behind typography, never over navigation.
+    $('.hero')?.prepend(canvas);
     const gl = canvas?.getContext('webgl', { alpha: true, antialias: false, depth: true, premultipliedAlpha: false, powerPreference: 'high-performance' });
     if (!gl) return null;
     const vertSrc = [
