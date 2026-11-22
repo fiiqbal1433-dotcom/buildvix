@@ -28,7 +28,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/assets/work/buildvix_web.webp" />
   <link rel="stylesheet" href="/v2/site.css" />
+  <link rel="stylesheet" href="/v2/showcase.css" />
   <script src="/v2/site.js" defer></script>
+  <script src="/v2/showcase.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -71,13 +73,66 @@
 
   <main id="main">
     <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero__portal" id="hero-portal" aria-label="Interactive three-dimensional Buildvix experience">
+        <div class="portal__sky" aria-hidden="true"></div>
+        <div class="portal__nebula portal__nebula--one" aria-hidden="true"></div>
+        <div class="portal__nebula portal__nebula--two" aria-hidden="true"></div>
+        <div class="portal__stars" aria-hidden="true"></div>
+        <div class="portal__world" id="portal-world">
+          <div class="portal__ring portal__ring--one" aria-hidden="true"></div>
+          <div class="portal__ring portal__ring--two" aria-hidden="true"></div>
+          <div class="portal__ring portal__ring--three" aria-hidden="true"></div>
+          <div class="portal__ring portal__ring--four" aria-hidden="true"></div>
+          <div class="portal__halo" aria-hidden="true"></div>
+          <div class="portal__core" aria-hidden="true">
+            <span class="portal__core-gloss"></span>
+            <span class="portal__core-inner"></span>
+            <span class="portal__monogram">B<span>®</span></span>
+          </div>
+          <span class="portal__node portal__node--one" aria-hidden="true"></span>
+          <span class="portal__node portal__node--two" aria-hidden="true"></span>
+          <span class="portal__node portal__node--three" aria-hidden="true"></span>
+          <a href="#services" class="portal__card portal__card--web" data-service-link="0">
+            <span class="portal__card-icon">⌘</span>
+            <span class="portal__card-text"><strong>Websites</strong><small>Fast · Immersive · Iconic</small></span>
+            <span class="portal__card-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href="#services" class="portal__card portal__card--software" data-service-link="1">
+            <span class="portal__card-icon">⟨/⟩</span>
+            <span class="portal__card-text"><strong>Software</strong><small>Custom · Scalable · Smart</small></span>
+            <span class="portal__card-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href="#services" class="portal__card portal__card--ux" data-service-link="2">
+            <span class="portal__card-icon">✳</span>
+            <span class="portal__card-text"><strong>UI / UX</strong><small>Intuitive · Premium · Human</small></span>
+            <span class="portal__card-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href="#services" class="portal__card portal__card--scale" data-service-link="3">
+            <span class="portal__card-icon">↗</span>
+            <span class="portal__card-text"><strong>Digital scale</strong><small>Create · Grow · Convert</small></span>
+            <span class="portal__card-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href="#work" class="portal__project portal__project--one" aria-label="View our digital projects">
+            <img src="/assets/work/buildvix_web.webp" alt="Buildvix web design project preview" loading="eager" width="320" height="230" />
+            <span>INTERACTIVE SYSTEMS ↗</span>
+          </a>
+          <a href="#work" class="portal__project portal__project--two" aria-label="See software work">
+            <img src="/assets/work/buildvix_platform.webp" alt="Buildvix digital product preview" loading="lazy" width="320" height="230" />
+            <span>DESIGNED TO SCALE ↗</span>
+          </a>
+          <span class="portal__data portal__data--top" aria-hidden="true">BV·001 // LIVE UNIVERSE</span>
+          <span class="portal__data portal__data--bottom" aria-hidden="true">MOVE CURSOR TO EXPLORE <span>↗</span></span>
+        </div>
+        <div class="portal__horizon" aria-hidden="true"></div>
+        <div class="portal__ground" aria-hidden="true"></div>
+      </div>
       <div class="hero__topline"><span class="status-dot"></span> <span>INDEPENDENT DIGITAL CREATIVE STUDIO</span><span class="hero__topline-right">SCROLL TO EXPLORE / 2026</span></div>
       <div class="hero__content">
         <p class="eyebrow hero__eyebrow">DESIGN × CODE × POSSIBILITY</p>
         <h1 id="hero-title">
-          <span class="hero-line" data-line>WE BUILD</span>
-          <span class="hero-line" data-line>THE <em>UN</em></span>
-          <span class="hero-line hero-line--last" data-line>EXPECTED<span class="headline-period">.</span></span>
+          <span class="hero-line" data-line>YOUR IDEA<span class="headline-period">.</span></span>
+          <span class="hero-line" data-line>OUR <em>CODE.</em></span>
+          <span class="hero-line hero-line--last" data-line>NO LIMITS<span class="headline-period">.</span></span>
         </h1>
         <div class="hero__bottom">
           <div class="hero__copy">
@@ -93,7 +148,7 @@
           </div>
         </div>
       </div>
-      <div class="hero__sculpture-label" aria-hidden="true"><span>BV / 001</span><span>THE INFINITE FORM<br />REAL-TIME WEBGL SCULPTURE</span></div>
+      <div class="hero__sculpture-label" aria-hidden="true"><span>BV / 001</span><span>THE BUILDVIX UNIVERSE<br />INTERACTIVE 3D EXPERIENCE</span></div>
       <a href="#manifesto" class="scroll-indicator" aria-label="Scroll to discover"><span class="scroll-indicator__mouse"></span><span>SCROLL TO DISCOVER</span><span aria-hidden="true">↓</span></a>
     </section>
 
