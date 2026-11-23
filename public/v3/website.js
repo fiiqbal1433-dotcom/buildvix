@@ -7,7 +7,9 @@
   const coarse = window.matchMedia('(pointer: coarse)');
   const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
   const lerp = (a,b,t) => a+(b-a)*t;
-  document.documentElement.classList.add('js-motion');
+  // Content must remain visible even if browser extensions block animation code.
+  // Progressive enhancement: never hide an entire section behind JavaScript.
+  document.documentElement.classList.add('js-ready');
   $('#year').textContent = String(new Date().getFullYear());
   const header = $('#header');
   const progress = $('#progress');
@@ -49,6 +51,8 @@
     reveals.forEach(el=>observer.observe(el));
   } else reveals.forEach(el=>el.classList.add('is-visible'));
   if(reduced.matches)reveals.forEach(el=>el.classList.add('is-visible'));
+  // Time-bounded reveals: no section remains invisible if an observer fails.
+  setTimeout(()=>reveals.forEach(el=>el.classList.add('is-visible')),3200);
 
   const services = [
     {name:'Web Experiences',image:'/assets/work/buildvix_web.webp',alt:'Illustrative Buildvix website design preview',copy:'Performance-first websites, interactive front ends, immersive WebGL and e-commerce experiences that stand apart.'},
@@ -149,6 +153,10 @@
     stage.style.transform=`translate3d(0,${(-stageOffset).toFixed(1)}px,0) scale(${(1+progress*.08).toFixed(3)})`;
     stage.style.opacity=String(clamp(1-progress*.52,.42,1));
   }
-  if(!reduced.matches)raf=requestAnimationFrame(draw);
+  const lightweight = new URLSearchParams(location.search).get('lite') === '1'
+    || new URLSearchParams(location.search).get('no3d') === '1'
+    || !!(navigator.connection && navigator.connection.saveData)
+    || Number(navigator.deviceMemory || 8) <= 2;
+  if(!reduced.matches && !lightweight)raf=requestAnimationFrame(draw);
   window.addEventListener('pagehide',()=>cancelAnimationFrame(raf),{once:true});
 })();
