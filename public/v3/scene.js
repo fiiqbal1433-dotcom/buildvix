@@ -65,14 +65,26 @@
       float spec1=pow(max(0.,dot(reflect(-light1,n),viewDir)),62.);
       float spec2=pow(max(0.,dot(reflect(-light2,n),viewDir)),90.);
       float stripe=pow(max(0.,sin(vWorld.y*4.5+vWorld.x*2.7+vWorld.z*5.5+uTime*.12)),16.);
-      vec3 chrome=vec3(.07,.115,.1)+diff1*vec3(.48,.59,.55)+diff2*vec3(.22,.5,.31)+diff3*vec3(.19,.28,.22);
-      chrome+=spec1*vec3(1.15,1.4,1.2)+spec2*vec3(.94,1.2,1.0);
-      chrome+=fresnel*vec3(.53,.84,.62)+stripe*vec3(.4,.88,.47);
-      float greenPulse=.56+.44*sin(vWorld.y*1.7+vWorld.z*2.0+uTime*.48);
-      vec3 emerald=vec3(.01,.12,.025)+diff1*vec3(.04,.93,.14)+diff2*vec3(.35,.89,.19)+spec1*vec3(.67,1.3,.7);
-      emerald+=fresnel*vec3(.07,1.16,.23)*greenPulse+stripe*vec3(.2,1.2,.25);
+      // Brushed chrome + smoked emerald glass. Keep the palette mostly neutral;
+      // green appears as controlled reflected light rather than cartoon fill.
+      float horizon=.5+.5*n.y;
+      vec3 chrome=vec3(.025,.035,.032)
+        +diff1*vec3(.34,.39,.37)
+        +diff2*vec3(.11,.19,.14)
+        +diff3*vec3(.08,.10,.09);
+      chrome+=spec1*vec3(1.75,1.92,1.82)+spec2*vec3(1.12,1.28,1.17);
+      chrome+=fresnel*mix(vec3(.30,.38,.34),vec3(.48,.92,.60),.42)
+        +stripe*vec3(.08,.22,.12)
+        +horizon*vec3(.018,.028,.023);
+      float greenPulse=.72+.28*sin(vWorld.y*1.5+vWorld.z*1.7+uTime*.32);
+      vec3 emerald=vec3(.004,.028,.010)
+        +diff1*vec3(.015,.34,.055)
+        +diff2*vec3(.02,.17,.05)
+        +spec1*vec3(.75,1.15,.84);
+      emerald+=fresnel*vec3(.03,.72,.16)*greenPulse
+        +stripe*vec3(.025,.28,.075);
       vec3 color=mix(chrome,emerald,step(.5,uMaterial));
-      color=pow(color,vec3(.86));
+      color=pow(max(color,vec3(0.0)),vec3(.78));
       gl_FragColor=vec4(color,uAlpha);
     }`;
   const lineVert = `attribute vec3 aPosition; uniform mat4 uProjection;uniform mat4 uView;uniform mat4 uModel;void main(){gl_Position=uProjection*uView*uModel*vec4(aPosition,1.);}`;
@@ -113,25 +125,39 @@
     return {position:mkbuf(new Float32Array(coords),gl.ARRAY_BUFFER),normal:mkbuf(new Float32Array(norms),gl.ARRAY_BUFFER),index:mkbuf(new Uint16Array(indices),gl.ELEMENT_ARRAY_BUFFER),count:indices.length};
   }
   // Shells grow from a shared emerald centre and spiral into reflective, tapered silver blades.
-  function petalFunction(k,inner=false){
-    const phi=k*Math.PI*2/7;
+  // Faceted turbine ribbons inspired by precision industrial objects rather than petals.
+  // Each blade has a razor profile, irregular sweep and small thickness illusion from the normal field.
+  function bladeFunction(k,inner=false){
+    const count=inner?5:9;
+    const phi=k*Math.PI*2/count + (inner?.31:0);
     return(u,v)=>{
-      const t=Math.sin(Math.PI*Math.max(.002,Math.min(.998,u)));
-      const wing=(inner?.48:.83)*Math.pow(t,.72)*(1+.12*Math.sin(k*2.1));
-      const twist=phi+u*(inner?.38:.74)+Math.sin(u*2.1+k)*.18+v*wing;
-      const radius=inner?.30+u*.6: .24+u*1.27+Math.sin(u*4+k)*.09;
-      const pointy=1-Math.pow(Math.abs(v),2)*.3;
-      const r=radius*pointy;
-      const height=(inner?3.05:4.0)*(u-.48)+(inner?.28:.35)*v*v*Math.sin(u*4+k);
-      return[Math.cos(twist)*r, height, Math.sin(twist)*r+.14*Math.sin(u*7+k+v*2)];
+      const ease=u*u*(3.0-2.0*u);
+      const taper=Math.pow(Math.max(.001,Math.sin(Math.PI*u)),inner?.72:.58);
+      const halfWidth=(inner?.34:.48)*taper*(1+.08*Math.sin(k*1.91));
+      const sweep=phi + ease*(inner?1.18:.72) + .08*Math.sin(u*5.0+k);
+      const radial=(inner?.28:.62) + ease*(inner?.83:1.38);
+      const edge=v*halfWidth;
+      const torsion=edge*(inner?.78:1.13) + Math.sin(u*3.4+k)*.055;
+      const angle=sweep+torsion;
+      const r=radial*(1-.09*v*v);
+      const y=(u-.5)*(inner?2.62:3.85) + edge*(inner?.72:1.05) + .12*Math.sin(u*5.3+k);
+      const zLift=.16*Math.sin(u*6.0+k)+.08*v*Math.cos(u*4.0+k);
+      return [Math.cos(angle)*r, y, Math.sin(angle)*r+zLift];
     };
   }
-  function addVortex(){const out=[];for(let k=0;k<7;k++)out.push({mesh:makeSurface(petalFunction(k,false)),material:0,alpha:.94,offset:k});for(let k=0;k<7;k++)out.push({mesh:makeSurface(petalFunction(k,true),36,16),material:1,alpha:.98,offset:k});return out;}
-  const parts=addVortex();
+  function addSculpture(){
+    const out=[];
+    for(let k=0;k<9;k++)out.push({mesh:makeSurface(bladeFunction(k,false),58,12),material:0,alpha:.985,offset:k});
+    for(let k=0;k<5;k++)out.push({mesh:makeSurface(bladeFunction(k,true),48,10),material:1,alpha:.94,offset:k});
+    return out;
+  }
+  const parts=addSculpture();
   function orbit(t,r,tilt,phase){const x=r*Math.cos(t),y=.28*Math.sin(t*2+phase),z=r*Math.sin(t);const c=Math.cos(tilt),s=Math.sin(tilt);return [x,y*c-z*s,y*s+z*c];}
   const orbits=[];
   function createOrbit(r,tilt,phase,col){const data=[];for(let i=0;i<=320;i++)data.push(...orbit(i/320*Math.PI*2,r,tilt,phase));orbits.push({buffer:mkbuf(new Float32Array(data),gl.ARRAY_BUFFER),count:321,col});}
-  createOrbit(2.27,.52,.4,[.07,1,.2,.82]);createOrbit(2.07,-.64,2,[.68,.96,.72,.5]);createOrbit(2.56,.16,3,[.18,.79,.29,.3]);
+  createOrbit(2.34,.52,.4,[.13,1.,.29,.62]);
+  createOrbit(2.13,-.64,2,[.78,.92,.82,.22]);
+  createOrbit(2.63,.16,3,[.12,.54,.22,.20]);
   const dust=[];let seed=8873;function rand(){seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;}
   for(let i=0;i<130;i++){dust.push((rand()-.5)*9,(rand()-.5)*7,(rand()-.5)*3-1);}
   const dustBuffer=mkbuf(new Float32Array(dust),gl.ARRAY_BUFFER);
