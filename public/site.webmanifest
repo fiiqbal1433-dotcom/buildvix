@@ -1,7 +1,7 @@
 {
   "name": "Buildvix",
   "short_name": "Buildvix",
-  "description": "Custom Websites, Bespoke Software & Digital Scale",
+  "description": "High-performance websites, custom software and immersive 3D digital experiences by Buildvix.",
   "icons": [
     {
       "src": "/favicon-48x48.png",
@@ -24,8 +24,8 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#08090C",
-  "background_color": "#08090C",
+  "theme_color": "#050807",
+  "background_color": "#050807",
   "display": "standalone",
   "start_url": "/"
 }
