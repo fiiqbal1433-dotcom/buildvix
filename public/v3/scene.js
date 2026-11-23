@@ -9,6 +9,16 @@
   if (!canvas || !stage || !hero) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const coarse = matchMedia('(pointer: coarse)');
+  // Keep the complete site usable when graphics drivers block WebGL or users
+  // request reduced effects. The existing SVG sculpture remains visible.
+  const params = new URLSearchParams(location.search);
+  const lightMode = params.get('lite') === '1' || params.get('no3d') === '1';
+  const lowMemory = Number(navigator.deviceMemory || 8) <= 2;
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  if (lightMode || reduce.matches || lowMemory || saveData) {
+    stage.classList.add('is-lightweight');
+    return;
+  }
   let gl;
   try { gl = canvas.getContext('webgl', { alpha: true, antialias: true, depth: true, preserveDrawingBuffer: false, premultipliedAlpha: false, powerPreference: 'high-performance' }) || canvas.getContext('experimental-webgl'); } catch { return; }
   if (!gl) return;
@@ -126,7 +136,7 @@
   for(let i=0;i<130;i++){dust.push((rand()-.5)*9,(rand()-.5)*7,(rand()-.5)*3-1);}
   const dustBuffer=mkbuf(new Float32Array(dust),gl.ARRAY_BUFFER);
   let ratio=1,dpr=1,proj=I();
-  function resize(){const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return;dpr=Math.min(window.devicePixelRatio||1,innerWidth<720?1.25:1.75);canvas.width=Math.max(1,Math.floor(b.width*dpr));canvas.height=Math.max(1,Math.floor(b.height*dpr));gl.viewport(0,0,canvas.width,canvas.height);ratio=canvas.width/canvas.height;proj=projection((innerWidth<750?57:47)*Math.PI/180,ratio,.1,60);}
+  function resize(){const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return;dpr=Math.min(window.devicePixelRatio||1,innerWidth<720?1:1.35);canvas.width=Math.max(1,Math.min(1800,Math.floor(b.width*dpr)));canvas.height=Math.max(1,Math.min(1400,Math.floor(b.height*dpr)));gl.viewport(0,0,canvas.width,canvas.height);ratio=canvas.width/canvas.height;proj=projection((innerWidth<750?57:47)*Math.PI/180,ratio,.1,60);}
   resize();window.addEventListener('resize',resize,{passive:true});
   const pointer={x:0,y:0,rx:0,ry:0};
   addEventListener('pointermove',e=>{if(coarse.matches)return;pointer.x=(e.clientX/innerWidth-.5)*2;pointer.y=(.5-e.clientY/innerHeight)*2;},{passive:true});
@@ -134,7 +144,10 @@
   gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);
   gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   let start=performance.now(),last=0,animation=0,hasRendered=false,visible=true,contextLost=false;
-  const observer=new IntersectionObserver(entries=>visible=entries[0]?.isIntersecting??true,{threshold:0});observer.observe(hero);
+  const observer = 'IntersectionObserver' in window
+    ? new IntersectionObserver(entries=>visible=entries[0]?.isIntersecting??true,{threshold:0})
+    : null;
+  observer?.observe(hero);
   function render(now){
     if(contextLost)return;
     if(!reduce.matches)animation=requestAnimationFrame(render);
@@ -164,8 +177,13 @@
   }
   canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;cancelAnimationFrame(animation);stage.classList.remove('has-webgl');},{passive:false});
   canvas.addEventListener('webglcontextrestored',()=>{contextLost=false;resize();start=performance.now();animation=requestAnimationFrame(render);});
-  try {render(performance.now());} catch(e){console.warn('Buildvix 3D renderer fallback:',e);stage.classList.remove('has-webgl');return;}
+  try {render(performance.now());} catch(e){
+    console.warn('Buildvix 3D renderer fallback:',e);
+    contextLost=true;cancelAnimationFrame(animation);
+    stage.classList.remove('has-webgl');stage.classList.add('is-lightweight');
+    return;
+  }
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!reduce.matches&&!contextLost){cancelAnimationFrame(animation);animation=requestAnimationFrame(render);}});
-  window.addEventListener('pagehide',()=>{cancelAnimationFrame(animation);observer.disconnect();},{once:true});
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(animation);observer?.disconnect();},{once:true});
   reduce.addEventListener?.('change',()=>{cancelAnimationFrame(animation);animation=requestAnimationFrame(render);});
 })();
